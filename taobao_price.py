@@ -12,6 +12,7 @@ prefs = {
 }
 chrome_opt.add_experimental_option('prefs', prefs)
 
+
 # 写你下载的对应 浏览器 diver 的驱动路径
 # browser = webdriver.Chrome(executable_path='/home/wsm/Downloads/chromedriver')
 browser = webdriver.Chrome(executable_path='/Users/wsm/Downloads/chromedriver', chrome_options=chrome_opt)
