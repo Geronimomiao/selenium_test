@@ -15,10 +15,10 @@ import time
 from scrapy.selector import Selector
 from selenium import webdriver
 
-
+# selenium 目前无法登录 成功 浏览器会检测其环境变量
+# 建议用 pyppetteer 来 模拟登录
 # 写你下载的对应 浏览器 diver 的驱动路径
 # browser = webdriver.Chrome(executable_path='/home/wsm/Downloads/chromedriver')
-
 
 browser = webdriver.Chrome(executable_path='/Users/wsm/Downloads/chromedriver')
 
@@ -30,8 +30,9 @@ browser.get('https://www.zhihu.com/signup?next=%2F')
 browser.find_element_by_css_selector('.SignContainer-switch span').click()
 
 # 填充表单元素
-username = '13001380337'
-password = 'Geronimo1701'
+# 知乎登录 账号 密码
+username = ''
+password = ''
 
 user_input = browser.find_element_by_css_selector(".SignFlow-accountInput input[name='username']")
 for char in username:
