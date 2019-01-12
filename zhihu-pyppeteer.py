@@ -34,11 +34,32 @@ async def get_cookie(page):
     return cookies
 
 
+async def request_check(req):
+    '''请求过滤'''
+    if req.resourceType in ['image', 'media', 'eventsource', 'websocket']:
+        await req.abort()
+    else:
+        await req.continue_()
+
+
+
 async def login(username, pd, url):
-    browser = await launch({'headless': False, 'args': ['--no-sandbox'], })
+    browser = await launch({
+        'headless': False,
+        'args': ['--no-sandbox'],
+        # 默认超时为30秒，设置为0则表示不设置超时
+        'timeout': 0
+    })
     page = await browser.newPage()
-    await page.setUserAgent(
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 Edge/16.16299')
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36 Edge/16.16299')
+    await page.setViewport({
+        "width": 1200,
+        "height": 800
+    });
+    # 过滤 请求 中 'image', 'media', 'eventsource', 'websocket' 信息
+    await page.setRequestInterception(True)
+    page.on('request', request_check)
+
     await page.goto(url)
     # 在网页中执行js代码
     await page.evaluate(js1)
@@ -46,13 +67,17 @@ async def login(username, pd, url):
     await page.evaluate(js4)
     await page.evaluate(js5)
     await page.type('.SignFlow-account .Input', username, {'delay': input_time_random() - 50})
-    await page.type('.SignFlow-password .Input', pd, {'daelay': input_time_random()})
+    await page.type('.SignFlow-password .Input', pd, {'delay': input_time_random()})
     time.sleep(2)
     await page.click('.Button.SignFlow-submitButton.Button--primary.Button--blue')
-    # 鼠标模拟点击
-    page.mouse
-    await page.waitFor(20)
+
+    await page.waitFor(200)
     await page.waitForNavigation()
+
+
+
+
+
     print(page.url)
     await get_cookie(page)
 
