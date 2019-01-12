@@ -15,10 +15,17 @@ import time
 from scrapy.selector import Selector
 from selenium import webdriver
 
+
 # 写你下载的对应 浏览器 diver 的驱动路径
-browser = webdriver.Chrome(executable_path='/home/wsm/Downloads/chromedriver')
+# browser = webdriver.Chrome(executable_path='/home/wsm/Downloads/chromedriver')
+
+
+browser = webdriver.Chrome(executable_path='/Users/wsm/Downloads/chromedriver')
 
 browser.get('https://www.zhihu.com/signup?next=%2F')
+
+# 防止页面未加载 完 而找不到选择的元素
+# time.sleep(1)
 
 browser.find_element_by_css_selector('.SignContainer-switch span').click()
 
